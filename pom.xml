@@ -37,8 +37,8 @@
 
   </properties>
 
-  <name>RocketChat Notifier</name>
-  <artifactId>rocketchatnotifier</artifactId>
+  <name>SmileHub Notifier</name>
+  <artifactId>smilehubnotifier</artifactId>
   <version>1.4.10-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
@@ -71,7 +71,7 @@
   <build>
 
     <defaultGoal>clean test</defaultGoal>
-    <finalName>rocketchatnotifier-plugin</finalName>
+    <finalName>smilehubnotifier-plugin</finalName>
 
     <pluginManagement>
       <plugins>
@@ -129,7 +129,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>
         <configuration>
-          <tagNameFormat>rocketchatnotifier-@{project.version}</tagNameFormat>
+          <tagNameFormat>smilehubnotifier-@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
       <plugin>
@@ -369,10 +369,10 @@
 
   <ciManagement>
     <system>Jenkins</system>
-    <url>https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/</url>
+    <url>https://jenkins.ci.cloudbees.com/job/plugins/job/smilehubnotifier-plugin/</url>
   </ciManagement>
 
-  <url>https://plugins.jenkins.io/rocketchatnotifier</url>
+  <url>https://plugins.jenkins.io/smilehubnotifier</url>
 
   <developers>
     <developer>
