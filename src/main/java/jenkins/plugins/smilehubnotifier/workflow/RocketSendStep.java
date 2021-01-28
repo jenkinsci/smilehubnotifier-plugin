@@ -177,7 +177,7 @@ public class RocketSendStep extends AbstractStepImpl {
 
     @Override
     public String getFunctionName() {
-      return "rocketSend";
+      return "smilehubSend";
     }
 
     @Override
