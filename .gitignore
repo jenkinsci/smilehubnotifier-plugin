@@ -19,3 +19,5 @@ buildNumber.properties
 
 
 *.log
+.vscode/
+.history/

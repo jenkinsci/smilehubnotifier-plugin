@@ -4,8 +4,8 @@
   <f:entry field="message" title="Message">
     <f:textbox/>
   </f:entry>
-  <f:entry field="serverUrl" title="Rocket Server URL">
-    <f:textbox/>
+  <f:entry field="serverUrl" title="SmileHub Server URL">
+    <f:textbox default="https://schat.smilegate.net/"/>
   </f:entry>
   <f:entry field="trustSSL" title="Trust Server Certificate?">
     <f:checkbox />
