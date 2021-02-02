@@ -14,33 +14,9 @@
     so it should be straightforward to find them.
   -->
   <f:section title="Global SmileHub Notifier Settings">
-    <f:entry title="SmileHub Server URL">
-      <f:textbox field="rocketServerUrl" clazz="required" name="rocketServerUrl" default="https://schat.smilegate.net/"/>
+    <f:entry title="Webhook Token">
+      <f:password field="webhookToken" name="webhookToken" help="As alternative for login/password you can use the webhook token here"/>
     </f:entry>
-    <f:entry title="Login Username">
-      <f:textbox field="username" name="username" help="Login of the user. Can also be the user id for token based login"/>
-    </f:entry>
-    <f:entry title="Login password">
-      <f:password field="password" name="password" help="Password of the rocketchat user. Can be also the personal access token"/>
-    </f:entry>
-    <f:entry title="Channel" description="Comma separated list of rooms (e.g. #project) and / or persons (e.g. @john)">
-      <f:textbox field="channel" clazz="required" name="channel" />
-    </f:entry>
-    <f:advanced>
-      <f:entry title="Trust Server Certificate?"
-               description="If checked, the SSL certificate of the Rocket Server will not be checked">
-        <f:checkbox field="trustSSL" name="trustSSL"/>
-      </f:entry>
-      <f:entry title="Webhook Token Credential ID">
-        <f:textbox field="webhookTokenCredentialId" name="webhookTokenCredentialId" help="Webhook token as Secret Text credential for posting messages. Overrides webhook token text."/>
-      </f:entry>
-      <f:entry title="Webhook Token">
-        <f:password field="webhookToken" name="webhookToken" help="As alternative for login/password you can use the webhook token here"/>
-      </f:entry>
-      <f:entry title="Build Server URL">
-        <f:textbox field="buildServerUrl" name="buildServerUrl"/>
-      </f:entry>
-    </f:advanced>
     <f:validateButton
       title="${%Test Connection}" progress="${%Testing...}"
       method="testConnection"
