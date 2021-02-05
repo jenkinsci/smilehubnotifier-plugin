@@ -34,14 +34,14 @@ The message looks then like this:
 It also works with normal jobs:
 
 
-![job config](smilhub_job_config.png)
+![job config](smilehub_job_config.png)
 
 ## Admin settings
 
 You can define a default notification channel:
 
 
-![sampel message](smilhub_admin_settings.png)
+![sampel message](smilehub_admin_settings.png)
 
 # Contribution
 
