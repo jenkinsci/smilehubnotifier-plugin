@@ -10,6 +10,7 @@ import hudson.model.TaskListener;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.plugins.smilehubnotifier.Messages;
 import jenkins.plugins.smilehubnotifier.SmileHubNotifier;
@@ -27,6 +28,7 @@ import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.verb.POST;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -201,7 +203,8 @@ public class RocketSendStep extends AbstractStepImpl {
 
     //WARN users that they should not use the plain/exposed token, but rather the token credential id
     public FormValidation doCheckWebhookToken(@QueryParameter String value) {
-      if (StringUtils.isEmpty(value)) {
+      Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+      if (Util.fixEmptyAndTrim(value) == null) {
         return FormValidation.ok();
       }
       return FormValidation.warning("Exposing your Integration Token is a security risk. Please use the Webhook Token Credential ID");
@@ -244,10 +247,10 @@ public class RocketSendStep extends AbstractStepImpl {
       String server = step.serverUrl != null ? step.serverUrl : rocketDesc.getRocketServerUrl();
       boolean trustSSL = step.trustSSL || rocketDesc.isTrustSSL();
       String user = rocketDesc.getUsername();
-      String password = rocketDesc.getPassword();
+      String password = Secret.toString(rocketDesc.getPassword());
       String channel = step.channel != null ? step.channel : rocketDesc.getChannel();
       String jenkinsUrl = rocketDesc.getBuildServerUrl();
-      String webhookToken = step.webhookToken != null ? step.webhookToken : rocketDesc.getWebhookToken();
+      String webhookToken = step.webhookToken != null ? step.webhookToken : Secret.toString(rocketDesc.getWebhookToken());
       String webhookTokenCredentialId = step.webhookTokenCredentialId != null ? step.webhookTokenCredentialId : rocketDesc.getWebhookTokenCredentialId();
       // placing in console log to simplify testing of retrieving values from global config or from step field; also used for tests
       listener.getLogger().println(Messages.RocketSendStepConfig(server, trustSSL, channel, step.message));

@@ -6,6 +6,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
+import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
@@ -17,6 +18,7 @@ import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import hudson.util.Secret;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.plugins.smilehubnotifier.model.MessageAttachment;
@@ -30,6 +32,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
+import org.kohsuke.stapler.verb.POST;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
@@ -49,7 +52,7 @@ public class SmileHubNotifier extends Notifier {
   private String rocketServerUrl;
   private boolean trustSSL;
   private String username;
-  private String password;
+  private Secret password;
   private String channel;
   private String buildServerUrl;
   private boolean notifyStart;
@@ -67,7 +70,7 @@ public class SmileHubNotifier extends Notifier {
   private String customMessage;
   private boolean rawMessage;
   private List<MessageAttachment> attachments;
-  private String webhookToken;
+  private Secret webhookToken;
   private String webhookTokenCredentialId;
 
   @Override
@@ -164,7 +167,7 @@ public class SmileHubNotifier extends Notifier {
     return customMessage;
   }
 
-  public String getWebhookToken() {
+  public Secret getWebhookToken() {
     return webhookToken;
   }
 
@@ -305,7 +308,7 @@ public class SmileHubNotifier extends Notifier {
   }
 
   @DataBoundSetter
-  public void setWebhookToken(String webhookToken) {
+  public void setWebhookToken(Secret webhookToken) {
     this.webhookToken = webhookToken;
   }
 
@@ -335,7 +338,7 @@ public class SmileHubNotifier extends Notifier {
   }
 
   @DataBoundSetter
-  public void setPassword(String password) {
+  public void setPassword(Secret password) {
     this.password = password;
   }
 
@@ -351,11 +354,11 @@ public class SmileHubNotifier extends Notifier {
     }
   }
 
-  public SmileHubNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final String password, final String channel, final String buildServerUrl,
+  public SmileHubNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final Secret password, final String channel, final String buildServerUrl,
                             final boolean notifyStart, final boolean notifyAborted, final boolean notifyFailure,
                             final boolean notifyNotBuilt, final boolean notifySuccess, final boolean notifyUnstable, final boolean notifyBackToNormal,
                             final boolean notifyRepeatedFailure, final boolean includeTestSummary, final boolean includeTestLog, CommitInfoChoice commitInfoChoice,
-                            boolean includeCustomMessage, final boolean rawMessage, String customMessage, List<MessageAttachment> attachments, String webhookToken, String webhookTokenCredentialId) {
+                            boolean includeCustomMessage, final boolean rawMessage, String customMessage, List<MessageAttachment> attachments, Secret webhookToken, String webhookTokenCredentialId) {
     super();
     this.rocketServerUrl = rocketServerUrl;
     this.trustSSL = trustSSL;
@@ -395,9 +398,9 @@ public class SmileHubNotifier extends Notifier {
     if (StringUtils.isEmpty(username)) {
       username = getDescriptor().getUsername();
     }
-    String password = this.password;
+    String password = Secret.toString(this.password);
     if (StringUtils.isEmpty(password)) {
-      password = getDescriptor().getPassword();
+      password = Secret.toString(getDescriptor().getPassword());
     }
     String channel = this.channel;
     if (StringUtils.isEmpty(channel)) {
@@ -407,9 +410,9 @@ public class SmileHubNotifier extends Notifier {
     if (StringUtils.isEmpty(webhookTokenCredentialId)) {
       webhookTokenCredentialId = getDescriptor().getWebhookTokenCredentialId();
     }
-    String webhookToken = this.webhookToken;
+    String webhookToken = Secret.toString(this.webhookToken);
     if (StringUtils.isEmpty(webhookToken)) {
-      webhookToken = getDescriptor().getWebhookToken();
+      webhookToken = Secret.toString(getDescriptor().getWebhookToken());
     }
 
     EnvVars env;
@@ -465,10 +468,10 @@ public class SmileHubNotifier extends Notifier {
     private String rocketServerUrl;
     private boolean trustSSL;
     private String username;
-    private String password;
+    private Secret password;
     private String channel;
     private String buildServerUrl;
-    private String webhookToken;
+    private Secret webhookToken;
     private String webhookTokenCredentialId;
 
     public static final CommitInfoChoice[] COMMIT_INFO_CHOICES = CommitInfoChoice.values();
@@ -489,7 +492,7 @@ public class SmileHubNotifier extends Notifier {
       return username;
     }
 
-    public String getPassword() {
+    public Secret getPassword() {
       return password;
     }
 
@@ -497,7 +500,7 @@ public class SmileHubNotifier extends Notifier {
       return channel;
     }
 
-    public String getWebhookToken() {
+    public Secret getWebhookToken() {
       return webhookToken;
     }
 
@@ -526,7 +529,7 @@ public class SmileHubNotifier extends Notifier {
     }
 
     @DataBoundSetter
-    public void setPassword(String password) {
+    public void setPassword(Secret password) {
       this.password = password;
     }
 
@@ -553,7 +556,7 @@ public class SmileHubNotifier extends Notifier {
     }
 
     @DataBoundSetter
-    public void setWebhookToken(String webhookToken) {
+    public void setWebhookToken(Secret webhookToken) {
       this.webhookToken = webhookToken;
     }
 
@@ -578,6 +581,7 @@ public class SmileHubNotifier extends Notifier {
       return "SmileHub Notifications";
     }
 
+    @POST
     public FormValidation doTestConnection(@QueryParameter("rocketServerUrl") final String rocketServerUrl,
                                            @QueryParameter("trustSSL") final String trustSSL,
                                            @QueryParameter("username") final String username,
@@ -586,42 +590,43 @@ public class SmileHubNotifier extends Notifier {
                                            @QueryParameter("buildServerUrl") final String buildServerUrl,
                                            @QueryParameter("webhookToken") final String token,
                                            @QueryParameter("webhookTokenCredentialId") final String webhookTokenCredentialId) throws FormException {
+      Jenkins.get().checkPermission(Jenkins.ADMINISTER);
       try {
         String targetServerUrl = rocketServerUrl + RocketClientImpl.API_PATH;
-        if (StringUtils.isEmpty(rocketServerUrl)) {
+        if (Util.fixEmptyAndTrim(rocketServerUrl) == null) {
           targetServerUrl = this.rocketServerUrl;
         }
         boolean targetTrustSSL = this.trustSSL;
-        if (StringUtils.isNotEmpty(trustSSL)) {
+        if (Util.fixEmptyAndTrim(trustSSL) != null) {
           targetTrustSSL = BooleanUtils.toBoolean(trustSSL);
         }
         String targetUsername = username;
-        if (StringUtils.isEmpty(targetUsername)) {
+        if (Util.fixEmptyAndTrim(targetUsername) == null) {
           targetUsername = this.username;
         }
         String targetPassword = password;
-        if (StringUtils.isEmpty(targetPassword)) {
-          targetPassword = this.password;
+        if (Util.fixEmptyAndTrim(targetPassword) == null) {
+          targetPassword = Secret.toString(this.password);
         }
         String targetChannel = channel;
-        if (StringUtils.isEmpty(targetChannel)) {
+        if (Util.fixEmptyAndTrim(targetChannel) == null) {
           targetChannel = this.channel;
         }
         String targetBuildServerUrl = buildServerUrl;
-        if (StringUtils.isEmpty(targetBuildServerUrl)) {
+        if (Util.fixEmptyAndTrim(targetBuildServerUrl) == null) {
           targetBuildServerUrl = this.buildServerUrl;
         }
         String targetWebhookToken = token;
-        if (StringUtils.isEmpty(targetWebhookToken)) {
-          targetWebhookToken = this.webhookToken;
+        if (Util.fixEmptyAndTrim(targetWebhookToken) == null) {
+          targetWebhookToken = Secret.toString(this.webhookToken);
         }
         String targetWebhookTokenCredentialId = webhookTokenCredentialId;
-        if (StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
+        if (Util.fixEmptyAndTrim(targetWebhookTokenCredentialId) == null) {
           targetWebhookTokenCredentialId = this.webhookTokenCredentialId;
         }
 
         RocketClient rocketChatClient;
-        if (!StringUtils.isEmpty(targetWebhookToken) || !StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
+        if (Util.fixEmptyAndTrim(targetWebhookToken) != null || Util.fixEmptyAndTrim(targetWebhookTokenCredentialId) != null) {
           rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId, channel);
         } else {
           rocketChatClient = new RocketClientImpl(targetServerUrl, targetTrustSSL, targetUsername, targetPassword, targetChannel);
@@ -662,7 +667,8 @@ public class SmileHubNotifier extends Notifier {
 
     //WARN users that they should not use the plain/exposed token, but rather the token credential id
     public FormValidation doCheckWebhookToken(@QueryParameter String value) {
-      if (StringUtils.isEmpty(value)) {
+    	Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+      if (Util.fixEmptyAndTrim(value) == null) {
         return FormValidation.ok();
       }
       return FormValidation.warning("Exposing your Integration Token is a security risk. Please use the Webhook Token Credential ID");
@@ -674,7 +680,7 @@ public class SmileHubNotifier extends Notifier {
 
     private String rocketServerUrl;
     private String username;
-    private String password;
+    private Secret password;
     private String channel;
     private boolean trustSSL;
     private boolean notifyStart;
@@ -695,7 +701,7 @@ public class SmileHubNotifier extends Notifier {
     public RocketJobProperty(String rocketServerUrl,
                              boolean trustSSL,
                              String username,
-                             String password,
+                             Secret password,
                              String channel,
                              boolean notifyStart,
                              boolean notifyAborted,
@@ -746,7 +752,7 @@ public class SmileHubNotifier extends Notifier {
     }
 
     @Exported
-    public String getPassword() {
+    public Secret getPassword() {
       return password;
     }
 
