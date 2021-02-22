@@ -13,7 +13,7 @@
     <java.level>8</java.level>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <failsafeArgLine/>
+    <failsafeArgLine />
     <skipITs>false</skipITs>
     <!-- Project Libs-->
     <httpclient.version>4.5.12</httpclient.version>
@@ -39,7 +39,7 @@
 
   <name>SmileHub Notifier</name>
   <artifactId>smilehubnotifier</artifactId>
-  <version>1.4.10-SNAPSHOT</version>
+  <version>1.4.10</version>
   <packaging>hpi</packaging>
 
   <licenses>
