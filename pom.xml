@@ -39,7 +39,7 @@
 
   <name>SmileHub Notifier</name>
   <artifactId>smilehubnotifier</artifactId>
-  <version>1.4.10</version>
+  <version>1.4.13-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <licenses>
