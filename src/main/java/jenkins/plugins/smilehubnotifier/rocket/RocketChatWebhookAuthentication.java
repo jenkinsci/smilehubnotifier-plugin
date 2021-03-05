@@ -11,7 +11,7 @@ public class RocketChatWebhookAuthentication implements RocketChatCallAuthentica
 
   public RocketChatWebhookAuthentication(String serverUrl, String webhookToken) {
     super();
-    this.serverUrl = serverUrl + (serverUrl.endsWith("/") ? "" : "/");
+    this.serverUrl = serverUrl != null ? serverUrl : "";
     this.webhookUrl = webhookToken.contains(HOOKS_PATH) ? webhookToken : (this.serverUrl + HOOKS_PATH + webhookToken);
   }
 

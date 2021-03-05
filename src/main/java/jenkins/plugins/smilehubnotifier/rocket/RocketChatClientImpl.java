@@ -144,14 +144,7 @@ public class RocketChatClientImpl implements RocketChatClient {
   @Override
   public void send(final String channelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments)
     throws CertificateException, RocketClientException {
-    if (!channelName.contains(",")) {
-      sendSingleMessage(channelName, message, emoji, avatar, attachments);
-      return;
-    }
-
-    for (String singleChanelName : channelName.split(",")) {
-      sendSingleMessage(singleChanelName, message, emoji, avatar, attachments);
-    }
+	  sendSingleMessage(channelName, message, emoji, avatar, attachments);
   }
 
   private void sendSingleMessage(final String singleChannelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments) throws RocketClientException {
