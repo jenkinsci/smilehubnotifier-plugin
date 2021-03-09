@@ -249,7 +249,7 @@ public class RocketSendStep extends AbstractStepImpl {
       String user = rocketDesc.getUsername();
       String password = Secret.toString(rocketDesc.getPassword());
       String channel = step.channel != null ? step.channel : rocketDesc.getChannel();
-      String jenkinsUrl = rocketDesc.getBuildServerUrl();
+      String jenkinsUrl = rocketDesc.getBuildServerUrl() != null ? rocketDesc.getBuildServerUrl() : "";
       String webhookToken = step.webhookToken != null ? step.webhookToken : Secret.toString(rocketDesc.getWebhookToken());
       String webhookTokenCredentialId = step.webhookTokenCredentialId != null ? step.webhookTokenCredentialId : rocketDesc.getWebhookTokenCredentialId();
       // placing in console log to simplify testing of retrieving values from global config or from step field; also used for tests

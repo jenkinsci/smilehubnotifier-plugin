@@ -614,7 +614,7 @@ public class SmileHubNotifier extends Notifier {
         }
         String targetBuildServerUrl = buildServerUrl;
         if (Util.fixEmptyAndTrim(targetBuildServerUrl) == null) {
-          targetBuildServerUrl = this.buildServerUrl;
+          targetBuildServerUrl = this.buildServerUrl != null ? this.buildServerUrl : "";
         }
         String targetWebhookToken = token;
         if (Util.fixEmptyAndTrim(targetWebhookToken) == null) {
