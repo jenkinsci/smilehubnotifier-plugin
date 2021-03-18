@@ -261,7 +261,7 @@ public class RocketSendStep extends AbstractStepImpl {
 
         String msg = step.message;
         if (!step.rawMessage) {
-          msg += "," + run.getFullDisplayName() + "," + jenkinsUrl + run.getUrl() + "";
+          msg += ", " + run.getFullDisplayName().replace(" #", " No.") + ", " + run.getAbsoluteUrl() + "";
         }
 
         boolean publishSuccess = rocketClient.publish(msg, step.emoji, step.avatar,

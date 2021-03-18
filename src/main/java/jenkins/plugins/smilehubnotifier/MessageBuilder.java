@@ -133,7 +133,7 @@ public class MessageBuilder {
   private MessageBuilder startMessage() {
     message.append(this.escape(build.getProject().getFullDisplayName()));
     message.append(" - ");
-    message.append(this.escape(build.getDisplayName()));
+    message.append(this.escape(build.getDisplayName().replace("#", "No.")));
     message.append(" ");
     return this;
   }
@@ -168,7 +168,7 @@ public class MessageBuilder {
       message.append(", Failed: " + failed);
       message.append(", Skipped: " + skipped);
     } else {
-      message.append("\nNo Tests found.");
+      message.append("");
     }
     return this;
   }
