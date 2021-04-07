@@ -4,24 +4,13 @@
 
 ### Pipeline
 
-You can use it in the Workflow/Pipeline DSL
+You can use it in the Workflow/Pipeline DSL, with the global default channel:
 ```
 node {
     try {
      ...
     } catch (e) {
-        smilehubSend channel: 'abc', message: 'test'
-        throw e
-    }
-}
-```
-If you omit channel you can shorten it as it would now use the global default channel:
-```
-node {
-    try {
-     ...
-    } catch (e) {
-        smilehubSend 'test'
+        smilehubSend message: 'test'
         throw e
     }
 }
