@@ -27,7 +27,7 @@ public class RocketClientImpl implements RocketClient {
 
   public RocketClientImpl(String serverUrl, boolean trustSSL, String user, String password, String channel) throws RocketClientException {
     this.client = new RocketChatClientImpl(serverUrl, trustSSL, user, password);
-    this.client.getChannels();
+//    this.client.getChannels();
     this.channel = channel;
   }
 

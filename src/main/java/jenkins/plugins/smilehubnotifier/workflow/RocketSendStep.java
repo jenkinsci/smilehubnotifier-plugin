@@ -245,6 +245,8 @@ public class RocketSendStep extends AbstractStepImpl {
       SmileHubNotifier.DescriptorImpl rocketDesc = jenkins.getDescriptorByType(
         SmileHubNotifier.DescriptorImpl.class);
       String server = step.serverUrl != null ? step.serverUrl : rocketDesc.getRocketServerUrl();
+      server = server != null ? server : "";
+      
       boolean trustSSL = step.trustSSL || rocketDesc.isTrustSSL();
       String user = rocketDesc.getUsername();
       String password = Secret.toString(rocketDesc.getPassword());
