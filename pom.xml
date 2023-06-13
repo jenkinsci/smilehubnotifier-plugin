@@ -19,6 +19,7 @@
     <httpclient.version>4.5.12</httpclient.version>
     <unirest.version>1.4.9</unirest.version>
     <jackson.version>2.10.0.pr3</jackson.version>
+    <hamcrest.version>2.2</hamcrest.version>
     <jackson.version>2.10.0.pr3</jackson.version>
     <workflow-api.version>2.22</workflow-api.version>
     <workflow-support.version>2.14</workflow-support.version>
@@ -283,18 +284,6 @@
       <artifactId>workflow-support</artifactId>
       <version>${workflow-support.version}</version>
       <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-      <version>${hamcrest.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
-      <version>${hamcrest.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
