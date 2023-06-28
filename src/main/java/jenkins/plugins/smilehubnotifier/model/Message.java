@@ -1,7 +1,5 @@
 package jenkins.plugins.smilehubnotifier.model;
 
-import com.google.common.base.Objects;
-
 public class Message {
 
   private String msg;
@@ -23,8 +21,6 @@ public class Message {
 
   @Override
   public String toString() {
-    return Objects.toStringHelper(this)
-      .add("msg", msg)
-      .toString();
+    return "Message{msg=" + msg + "}";
   }
 }
